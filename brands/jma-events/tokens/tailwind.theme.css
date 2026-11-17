@@ -1,0 +1,31 @@
+/* jma.events — Tailwind CSS v4 theme. @import after 'tailwindcss'. */
+@theme {
+  --font-sans: Onest, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --color-brand: #2F5BFF;
+  --color-ink: #0B1026;
+  --color-accent: #8FA6FF;
+  --color-surface: #F3F5FF;
+  --color-brand-50: #F3F5FF;
+  --color-brand-100: #E4EAFF;
+  --color-brand-200: #C9D4FF;
+  --color-brand-300: #A1B5FF;
+  --color-brand-400: #6D8CFF;
+  --color-brand-500: #2F5BFF;
+  --color-brand-600: #294ED8;
+  --color-brand-700: #2240B1;
+  --color-brand-800: #1B3288;
+  --color-brand-900: #14235C;
+  --color-brand-950: #0F1940;
+  --color-neutral-50: #F7F8FB;
+  --color-neutral-100: #EEF0F5;
+  --color-neutral-200: #DDE1EA;
+  --color-neutral-300: #C3C9D6;
+  --color-neutral-400: #8F98AB;
+  --color-neutral-500: #626C82;
+  --color-neutral-600: #475066;
+  --color-neutral-700: #333B50;
+  --color-neutral-800: #1F263A;
+  --color-neutral-900: #141A2E;
+  --color-neutral-950: #0B1026;
+  --tracking-wordmark: -0.035em;
+}

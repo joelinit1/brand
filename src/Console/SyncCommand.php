@@ -1,0 +1,200 @@
+<?php
+
+namespace JoelInit1\Brand\Console;
+
+use Composer\InstalledVersions;
+use Illuminate\Console\Command;
+use Illuminate\Filesystem\Filesystem;
+
+class SyncCommand extends Command
+{
+    /**
+     * @var string
+     */
+    protected $signature = 'brand:sync
+        {brand : The brand to sync (jma-events or registration-space)}
+        {--force : Overwrite existing favicon files without asking}';
+
+    /**
+     * @var string
+     */
+    protected $description = 'Copy a brand\'s logos, icons, favicons, fonts, CSS and Blade components into this app';
+
+    /**
+     * Asset folders copied wholesale into public/brand.
+     *
+     * @var list<string>
+     */
+    private const ASSET_FOLDERS = ['logo', 'icon', 'png', 'fonts'];
+
+    public function handle(Filesystem $files): int
+    {
+        $brand = (string) $this->argument('brand');
+        $source = $this->packagePath("brands/{$brand}");
+
+        if (! $files->isDirectory($source)) {
+            $available = collect($files->directories($this->packagePath('brands')))->map(fn (string $path): string => basename($path))->implode(', ');
+            $this->components->error("Unknown brand [{$brand}]. Available: {$available}.");
+
+            return self::FAILURE;
+        }
+
+        /** @var array{slug: string, name: string, primary: string, ink: string, accent: string, surface: string} $meta */
+        $meta = json_decode($files->get("{$source}/brand.json"), true);
+
+        $this->syncAssets($files, $source);
+        $this->syncFavicons($files, $source);
+        $tailwindVersion = $this->tailwindMajorVersion($files);
+        $this->syncCss($files, $source, $tailwindVersion);
+        $this->syncComponents($files, $meta);
+        $this->writeManifest($files, $meta, $tailwindVersion);
+
+        $this->components->info("{$meta['name']} brand synced.");
+        $this->components->bulletList([
+            'Assets: public/brand/',
+            'Favicons: public/ (favicon.ico, favicon.svg, apple-touch-icon.png, android-chrome-*, maskable-512.png, site.webmanifest)',
+            'CSS: resources/css/brand.css'.($tailwindVersion === 4 ? ' (includes the Tailwind v4 @theme)' : ''),
+            'Blade: <x-brand.logo />, <x-brand.icon />, <x-brand.favicons />',
+        ]);
+
+        return self::SUCCESS;
+    }
+
+    private function syncAssets(Filesystem $files, string $source): void
+    {
+        foreach (self::ASSET_FOLDERS as $folder) {
+            $target = public_path("brand/{$folder}");
+            $files->deleteDirectory($target);
+            $files->copyDirectory("{$source}/{$folder}", $target);
+        }
+
+        $files->ensureDirectoryExists(public_path('brand/tokens'));
+
+        foreach (['tokens.json', 'brand.css'] as $tokenFile) {
+            $files->copy("{$source}/tokens/{$tokenFile}", public_path("brand/tokens/{$tokenFile}"));
+        }
+
+        $files->copy("{$source}/BRAND.md", public_path('brand/BRAND.md'));
+    }
+
+    private function syncFavicons(Filesystem $files, string $source): void
+    {
+        foreach ($files->files("{$source}/favicon") as $file) {
+            if ($file->getFilename() !== 'head-snippet.html') {
+                $this->copyPublicFile($files, $file->getPathname(), $file->getFilename());
+            }
+        }
+
+        $slug = basename($source);
+
+        /**
+         * Older favicon file names some apps already reference: refreshed only when they exist.
+         *
+         * @var array<string, string> $legacyFavicons
+         */
+        $legacyFavicons = [
+            'favicon-16x16.png' => "{$source}/png/icon/{$slug}-icon-16.png",
+            'favicon-32x32.png' => "{$source}/png/icon/{$slug}-icon-32.png",
+            'android-chrome-192x192.png' => "{$source}/favicon/android-chrome-192.png",
+            'android-chrome-512x512.png' => "{$source}/favicon/android-chrome-512.png",
+        ];
+
+        foreach ($legacyFavicons as $name => $replacement) {
+            if ($files->exists(public_path($name))) {
+                $this->copyPublicFile($files, $replacement, $name);
+            }
+        }
+    }
+
+    private function copyPublicFile(Filesystem $files, string $from, string $name): void
+    {
+        $target = public_path($name);
+        $exists = $files->exists($target);
+
+        if ($exists && md5_file($target) === md5_file($from)) {
+            return;
+        }
+
+        if ($exists && ! $this->option('force') && ! $this->confirm("Replace existing public/{$name}?", true)) {
+            return;
+        }
+
+        $files->copy($from, $target);
+    }
+
+    private function syncCss(Filesystem $files, string $source, ?int $tailwindVersion): void
+    {
+        $css = str_replace("url('../fonts/", "url('/brand/fonts/", $files->get("{$source}/tokens/brand.css"));
+
+        if ($tailwindVersion === 4) {
+            $theme = $files->get("{$source}/tokens/tailwind.theme.css");
+            $css .= "\n".preg_replace('/^\/\*.*?\*\/\n/s', '', $theme);
+        }
+
+        $header = "/* Generated by `php artisan brand:sync` from joelinit1/brand. Do not edit by hand; re-run the command instead. */\n";
+        $files->ensureDirectoryExists(resource_path('css'));
+        $files->put(resource_path('css/brand.css'), $header.$css);
+
+        if ($tailwindVersion === 3) {
+            $files->copy("{$source}/tokens/tailwind.preset.js", base_path('tailwind.brand.preset.js'));
+        }
+    }
+
+    /**
+     * @param  array{slug: string, name: string, primary: string, ink: string, accent: string, surface: string}  $meta
+     */
+    private function syncComponents(Filesystem $files, array $meta): void
+    {
+        $target = resource_path('views/components/brand');
+        $files->ensureDirectoryExists($target);
+
+        foreach ($files->files($this->packagePath('stubs/components')) as $stub) {
+            $contents = strtr($files->get($stub->getPathname()), [
+                '__SLUG__' => $meta['slug'],
+                '__NAME__' => $meta['name'],
+                '__PRIMARY__' => $meta['primary'],
+            ]);
+
+            $files->put($target.'/'.$stub->getFilename(), $contents);
+        }
+    }
+
+    /**
+     * @param  array{slug: string, name: string, primary: string, ink: string, accent: string, surface: string}  $meta
+     */
+    private function writeManifest(Filesystem $files, array $meta, ?int $tailwindVersion): void
+    {
+        $version = class_exists(InstalledVersions::class) && InstalledVersions::isInstalled('joelinit1/brand')
+            ? InstalledVersions::getPrettyVersion('joelinit1/brand')
+            : null;
+
+        $files->put(public_path('brand/brand.json'), json_encode([
+            'brand' => $meta['slug'],
+            'name' => $meta['name'],
+            'package_version' => $version,
+            'tailwind' => $tailwindVersion,
+        ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)."\n");
+    }
+
+    private function tailwindMajorVersion(Filesystem $files): ?int
+    {
+        if (! $files->exists(base_path('package.json'))) {
+            return null;
+        }
+
+        /** @var array{dependencies?: array<string, string>, devDependencies?: array<string, string>} $package */
+        $package = json_decode($files->get(base_path('package.json')), true) ?: [];
+        $constraint = $package['devDependencies']['tailwindcss'] ?? $package['dependencies']['tailwindcss'] ?? null;
+
+        if ($constraint === null || ! preg_match('/(\d+)/', $constraint, $matches)) {
+            return null;
+        }
+
+        return (int) $matches[1];
+    }
+
+    private function packagePath(string $path): string
+    {
+        return dirname(__DIR__, 2).'/'.$path;
+    }
+}

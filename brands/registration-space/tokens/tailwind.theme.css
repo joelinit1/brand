@@ -1,0 +1,31 @@
+/* registration.space — Tailwind CSS v4 theme. @import after 'tailwindcss'. */
+@theme {
+  --font-sans: Onest, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --color-brand: #6D4AFF;
+  --color-ink: #1A1238;
+  --color-accent: #B7A6FF;
+  --color-surface: #F5F3FF;
+  --color-brand-50: #F6F4FF;
+  --color-brand-100: #ECE7FF;
+  --color-brand-200: #D9D0FF;
+  --color-brand-300: #BDAEFF;
+  --color-brand-400: #9980FF;
+  --color-brand-500: #6D4AFF;
+  --color-brand-600: #5E40DB;
+  --color-brand-700: #4F36B7;
+  --color-brand-800: #3F2B92;
+  --color-brand-900: #2F206A;
+  --color-brand-950: #241950;
+  --color-neutral-50: #F7F8FB;
+  --color-neutral-100: #EEF0F5;
+  --color-neutral-200: #DDE1EA;
+  --color-neutral-300: #C3C9D6;
+  --color-neutral-400: #8F98AB;
+  --color-neutral-500: #626C82;
+  --color-neutral-600: #475066;
+  --color-neutral-700: #333B50;
+  --color-neutral-800: #1F263A;
+  --color-neutral-900: #141A2E;
+  --color-neutral-950: #1A1238;
+  --tracking-wordmark: -0.035em;
+}

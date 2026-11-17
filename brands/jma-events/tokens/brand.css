@@ -1,0 +1,64 @@
+/* jma.events brand — generated from tokens/tokens.json */
+
+@font-face {
+  font-family: 'Onest';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/onest-latin-400-normal.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Onest';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('../fonts/onest-latin-500-normal.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Onest';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('../fonts/onest-latin-600-normal.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Onest';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('../fonts/onest-latin-700-normal.woff2') format('woff2');
+}
+
+:root {
+  --je-brand: #2F5BFF;
+  --je-ink: #0B1026;
+  --je-accent: #8FA6FF;
+  --je-surface: #F3F5FF;
+  --je-brand-50: #F3F5FF;
+  --je-brand-100: #E4EAFF;
+  --je-brand-200: #C9D4FF;
+  --je-brand-300: #A1B5FF;
+  --je-brand-400: #6D8CFF;
+  --je-brand-500: #2F5BFF;
+  --je-brand-600: #294ED8;
+  --je-brand-700: #2240B1;
+  --je-brand-800: #1B3288;
+  --je-brand-900: #14235C;
+  --je-brand-950: #0F1940;
+  --je-neutral-50: #F7F8FB;
+  --je-neutral-100: #EEF0F5;
+  --je-neutral-200: #DDE1EA;
+  --je-neutral-300: #C3C9D6;
+  --je-neutral-400: #8F98AB;
+  --je-neutral-500: #626C82;
+  --je-neutral-600: #475066;
+  --je-neutral-700: #333B50;
+  --je-neutral-800: #1F263A;
+  --je-neutral-900: #141A2E;
+  --je-neutral-950: #0B1026;
+  --je-font-sans: Onest, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --je-tracking-wordmark: -0.035em;
+}

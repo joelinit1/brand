@@ -1,0 +1,64 @@
+/* registration.space brand — generated from tokens/tokens.json */
+
+@font-face {
+  font-family: 'Onest';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/onest-latin-400-normal.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Onest';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('../fonts/onest-latin-500-normal.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Onest';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('../fonts/onest-latin-600-normal.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Onest';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('../fonts/onest-latin-700-normal.woff2') format('woff2');
+}
+
+:root {
+  --rs-brand: #6D4AFF;
+  --rs-ink: #1A1238;
+  --rs-accent: #B7A6FF;
+  --rs-surface: #F5F3FF;
+  --rs-brand-50: #F6F4FF;
+  --rs-brand-100: #ECE7FF;
+  --rs-brand-200: #D9D0FF;
+  --rs-brand-300: #BDAEFF;
+  --rs-brand-400: #9980FF;
+  --rs-brand-500: #6D4AFF;
+  --rs-brand-600: #5E40DB;
+  --rs-brand-700: #4F36B7;
+  --rs-brand-800: #3F2B92;
+  --rs-brand-900: #2F206A;
+  --rs-brand-950: #241950;
+  --rs-neutral-50: #F7F8FB;
+  --rs-neutral-100: #EEF0F5;
+  --rs-neutral-200: #DDE1EA;
+  --rs-neutral-300: #C3C9D6;
+  --rs-neutral-400: #8F98AB;
+  --rs-neutral-500: #626C82;
+  --rs-neutral-600: #475066;
+  --rs-neutral-700: #333B50;
+  --rs-neutral-800: #1F263A;
+  --rs-neutral-900: #141A2E;
+  --rs-neutral-950: #1A1238;
+  --rs-font-sans: Onest, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --rs-tracking-wordmark: -0.035em;
+}
