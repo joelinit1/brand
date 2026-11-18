@@ -10,4 +10,4 @@ return $panel
     ->brandLogo(asset('brand/logo/registration-space-horizontal-colour.svg'))
     ->darkModeBrandLogo(asset('brand/logo/registration-space-horizontal-reversed.svg'))
     ->brandLogoHeight('2rem')
-    ->favicon(asset('brand/favicon/favicon.svg'));
+    ->favicon(asset('favicon.svg'));

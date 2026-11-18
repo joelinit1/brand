@@ -243,7 +243,7 @@ def build(key):
         f"    ->colors(['primary' => Color::hex('{P}'), 'gray' => Color::Slate])\n    ->font('Onest')\n"
         f"    ->brandLogo(asset('brand/logo/{pre}-horizontal-colour.svg'))\n"
         f"    ->darkModeBrandLogo(asset('brand/logo/{pre}-horizontal-reversed.svg'))\n"
-        "    ->brandLogoHeight('2rem')\n    ->favicon(asset('brand/favicon/favicon.svg'));\n")
+        "    ->brandLogoHeight('2rem')\n    ->favicon(asset('favicon.svg'));\n")
 
     pairs = [(f"White on {B['primary_name']}", WHITE, P), (f"{B['primary_name']} on White", P, WHITE),
              (f"{B['primary_name']} on Surface", P, SURF), ("Ink on White", INK, WHITE), ("Ink on Surface", INK, SURF),
