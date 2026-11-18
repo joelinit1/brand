@@ -18,20 +18,22 @@ WHITE = '#FFFFFF'; BLACK = '#000000'
 
 # ---------------- marks ----------------
 def j_mark():
-    u = 264.0; H = 2.75 * u; fw = 1.25 * u; r2 = u / 2
-    def width(small): return fw + (0.10 if small else 0.04) * H + u
+    u = 264.0; H = 2.75 * u; fw = 1.25 * u; fh = 1.25 * u
+    def gap(small): return (0.13 if small else 0.04) * H
+    def width(small): return fw + gap(small) + u
     def paths(ox, oy, s, small=False):
-        g = (0.10 if small else 0.04) * H
+        g = gap(small)
         X = lambda v: f"{ox + v*s:.3f}"; Y = lambda v: f"{oy + v*s:.3f}"; R = lambda v: f"{v*s:.3f}"
-        foot = (f"M{X(0)} {Y(H-u)} H{X(fw-r2)} A{R(r2)} {R(r2)} 0 0 1 {X(fw)} {Y(H-u+r2)} V{Y(H)} H{X(u)} "
+        top = H - fh
+        foot = (f"M{X(0)} {Y(top)} H{X(fw-u)} A{R(u)} {R(u)} 0 0 1 {X(fw)} {Y(top+u)} V{Y(H)} H{X(u)} "
                 f"A{R(u)} {R(u)} 0 0 1 {X(0)} {Y(H-u)} Z")
         sx = fw + g
         stem = f"M{X(sx)} {Y(u)} A{R(u)} {R(u)} 0 0 1 {X(sx+u)} {Y(0)} V{Y(H-u)} A{R(u)} {R(u)} 0 0 1 {X(sx)} {Y(H)} Z"
         return foot + " " + stem
-    return dict(height=H, width=width, paths=paths, name='J',
-                construction="- **Grid unit u** is the stem width. The stem is 1u × 2.75u; the foot is 1.25u × 1u.\n"
-                             "- **Two radii only:** u for the large curves, ½u for the foot's top-right corner.\n"
-                             "- **The split** is 4% of the J's height (10% in the small cut).")
+    return dict(height=H, width=width, paths=paths, name='J', share=0.64, maskable_share=0.52,
+                construction="- **Grid unit u** is the stem width. The stem is 1u × 2.75u; the foot is 1.25u × 1.25u.\n"
+                             "- **One radius only:** every curve is radius u: the stem's top-left and bottom-right, and the foot's top-right and bottom-left.\n"
+                             "- **The split** is 4% of the J's height, widened to 13% in the small-size cut so it survives at 16–32 px.")
 
 def r_mark():
     u = 232.0; H = 2.5 * u; SW, SH, SR = 1.125 * u, 1.0 * u, 0.75 * u
@@ -44,7 +46,7 @@ def r_mark():
         sh = (f"M{X(x0)} {Y(SR)} A{R(SR)} {R(SR)} 0 0 1 {X(x0+SR)} {Y(0)} H{X(x0+SW)} V{Y(SH-SR)} "
               f"A{R(SR)} {R(SR)} 0 0 1 {X(x0+SW-SR)} {Y(SH)} H{X(x0)} Z")
         return stem + " " + sh
-    return dict(height=H, width=width, paths=paths, name='r',
+    return dict(height=H, width=width, paths=paths, name='r', share=0.56, maskable_share=0.46,
                 construction="- **Grid unit u** is the stem width. The stem is 1u × 2.5u with a quarter-circle top-left (radius u); "
                              "the shoulder is 1.125u × 1u.\n"
                              "- **Two radii only:** u for the stem, ¾u for the shoulder's top-left and bottom-right curves.\n"
@@ -59,7 +61,7 @@ BRANDS = {
                      mark=r_mark(), min_lockup=('160 px', '40 mm'), primary='#6D4AFF', primary_name='Violet', ink='#1A1238', accent='#B7A6FF', surface='#F5F3FF'),
 }
 
-TILE_R = 0.22; SHARE = 0.56
+TILE_R = 0.22
 
 def rrect(x, y, w, h, r):
     if r == 0: return f"M{x} {y} H{x+w} V{y+h} H{x} Z"
@@ -114,10 +116,10 @@ def build(key):
         return M['paths'](cx - w/2, cy - size_h/2, s, small)
     def tile(x, y, size, tile_c, fill, small=False, radius=True):
         return (f'<path fill="{tile_c}" d="{rrect(x, y, size, size, size*TILE_R if radius else 0)}"/>'
-                f'<path fill="{fill}" d="{mark_d(size*SHARE, x+size/2, y+size/2, small)}"/>')
+                f'<path fill="{fill}" d="{mark_d(size*M["share"], x+size/2, y+size/2, small)}"/>')
     def cutout(x, y, size, colour, small=False):
         return (f'<path fill="{colour}" fill-rule="evenodd" d="{rrect(x, y, size, size, size*TILE_R)} '
-                f'{mark_d(size*SHARE, x+size/2, y+size/2, small)}"/>')
+                f'{mark_d(size*M["share"], x+size/2, y+size/2, small)}"/>')
 
     def wordmark(x, baseline, size, ink, dot):
         a, x1 = run_paths(B['bold'], 700, size, x, baseline, ink)
@@ -182,7 +184,7 @@ def build(key):
     render(svg_doc(S, S, tile(0, 0, S, P, WHITE, radius=False), 'icon'), f'{OUT}/favicon/apple-touch-icon.png', 180, 180)
     render(files[f'icon/{pre}-icon.svg'], f'{OUT}/favicon/android-chrome-192.png', 192, 192)
     render(files[f'icon/{pre}-icon.svg'], f'{OUT}/favicon/android-chrome-512.png', 512, 512)
-    render(svg_doc(S, S, f'<rect width="{S}" height="{S}" fill="{P}"/><path fill="{WHITE}" d="{mark_d(S*0.46, S/2, S/2)}"/>', 'icon'),
+    render(svg_doc(S, S, f'<rect width="{S}" height="{S}" fill="{P}"/><path fill="{WHITE}" d="{mark_d(S*M["maskable_share"], S/2, S/2)}"/>', 'icon'),
            f'{OUT}/favicon/maskable-512.png', 512, 512)
     write('favicon/site.webmanifest', json.dumps({"name": B['name'], "short_name": B['name'], "icons": [
         {"src": "/android-chrome-192.png", "sizes": "192x192", "type": "image/png"},
@@ -278,7 +280,7 @@ Lettering is converted to outlines, so the files don't need Onest installed.
 
 ### Icon construction
 {M['construction']}
-- **In the tile,** the mark is 56% of the tile height and mathematically centred. The tile's corner radius is 22% of its size.
+- **In the tile,** the mark is {round(M["share"]*100)}% of the tile height and mathematically centred. The tile's corner radius is 22% of its size.
 
 ### Don't
 - Change the colours, or put a coloured mark on a coloured tile.

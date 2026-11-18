@@ -27,10 +27,10 @@ Lettering is converted to outlines, so the files don't need Onest installed.
 **At 32 px and below,** use `icon/jma-events-icon-small.svg`. Its wider split stays visible.
 
 ### Icon construction
-- **Grid unit u** is the stem width. The stem is 1u × 2.75u; the foot is 1.25u × 1u.
-- **Two radii only:** u for the large curves, ½u for the foot's top-right corner.
-- **The split** is 4% of the J's height (10% in the small cut).
-- **In the tile,** the mark is 56% of the tile height and mathematically centred. The tile's corner radius is 22% of its size.
+- **Grid unit u** is the stem width. The stem is 1u × 2.75u; the foot is 1.25u × 1.25u.
+- **One radius only:** every curve is radius u: the stem's top-left and bottom-right, and the foot's top-right and bottom-left.
+- **The split** is 4% of the J's height, widened to 13% in the small-size cut so it survives at 16–32 px.
+- **In the tile,** the mark is 64% of the tile height and mathematically centred. The tile's corner radius is 22% of its size.
 
 ### Don't
 - Change the colours, or put a coloured mark on a coloured tile.
