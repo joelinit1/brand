@@ -239,11 +239,12 @@ def build(key):
     open(f'{OUT}/tokens/tailwind.preset.js', 'w').write("// Tailwind CSS v3 preset\nmodule.exports = " + json.dumps(preset, indent=2) + ";\n")
     open(f'{OUT}/tokens/filament-panel.php', 'w').write(
         f"<?php\n\n// {B['name']} — Filament panel branding. Apply inside your PanelProvider's panel() method.\n\n"
-        "use Filament\\Support\\Colors\\Color;\n\nreturn $panel\n"
+        "use Filament\\Support\\Colors\\Color;\nuse Filament\\View\\PanelsRenderHook;\nuse Illuminate\\Support\\Facades\\Blade;\n\nreturn $panel\n"
         f"    ->colors(['primary' => Color::hex('{P}'), 'gray' => Color::Slate])\n    ->font('Onest')\n"
         f"    ->brandLogo(asset('brand/logo/{pre}-horizontal-colour.svg'))\n"
         f"    ->darkModeBrandLogo(asset('brand/logo/{pre}-horizontal-reversed.svg'))\n"
-        "    ->brandLogoHeight('2rem')\n    ->favicon(asset('favicon.svg'));\n")
+        "    ->brandLogoHeight('2rem')\n    ->favicon(asset('favicon.svg'))\n"
+        "    ->renderHook(PanelsRenderHook::SIMPLE_LAYOUT_START, fn (): string => Blade::render('<x-brand.auth-aurora />'));\n")
 
     pairs = [(f"White on {B['primary_name']}", WHITE, P), (f"{B['primary_name']} on White", P, WHITE),
              (f"{B['primary_name']} on Surface", P, SURF), ("Ink on White", INK, WHITE), ("Ink on Surface", INK, SURF),

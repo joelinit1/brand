@@ -54,7 +54,7 @@ class SyncCommand extends Command
             'Assets: public/brand/',
             'Favicons: public/ (favicon.ico, favicon.svg, apple-touch-icon.png, android-chrome-*, maskable-512.png, site.webmanifest)',
             'CSS: resources/css/brand.css'.($tailwindVersion === 4 ? ' (includes the Tailwind v4 @theme)' : ''),
-            'Blade: <x-brand.logo />, <x-brand.icon />, <x-brand.favicons />',
+            'Blade: <x-brand.logo />, <x-brand.icon />, <x-brand.favicons />, <x-brand.auth-aurora />',
         ]);
 
         return self::SUCCESS;
@@ -153,6 +153,8 @@ class SyncCommand extends Command
                 '__SLUG__' => $meta['slug'],
                 '__NAME__' => $meta['name'],
                 '__PRIMARY__' => $meta['primary'],
+                '__INK__' => $meta['ink'],
+                '__ACCENT__' => $meta['accent'],
             ]);
 
             $files->put($target.'/'.$stub->getFilename(), $contents);
