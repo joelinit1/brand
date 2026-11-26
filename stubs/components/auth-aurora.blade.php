@@ -14,7 +14,7 @@
     .brand-aurora__glow { position: absolute; border-radius: 50%; will-change: transform; }
     .brand-aurora__glow--a { left: -25%; top: -35%; width: 85vmax; height: 85vmax; background: radial-gradient(closest-side, __PRIMARY__B3, __PRIMARY__00); animation: brand-aurora-a 22s ease-in-out infinite; }
     .brand-aurora__glow--b { right: -30%; bottom: -40%; width: 90vmax; height: 90vmax; background: radial-gradient(closest-side, __ACCENT__80, __ACCENT__00); animation: brand-aurora-b 28s ease-in-out infinite; }
-    .brand-aurora__mark { position: absolute; right: -6vw; top: 50%; height: 90vh; width: auto; transform: translateY(-50%); opacity: .045; }
+    .brand-aurora__mark { position: absolute; right: 5vh; top: 50%; height: 90vh; width: auto; transform: translateY(-50%); opacity: .045; }
     .brand-aurora-env { position: fixed; left: 50%; bottom: 1.25rem; transform: translateX(-50%); display: flex; align-items: center; gap: .5rem; font-size: .8125rem; color: #C9CEDD; white-space: nowrap; }
     .brand-aurora-env__badge { padding: .1875rem .5rem; border-radius: 999px; font-size: .75rem; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; background: #E3E6EE; color: #2B3142; }
     .brand-aurora-env__badge--staging { background: #FDE8C8; color: #7A4300; }
