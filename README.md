@@ -31,7 +31,7 @@ php artisan brand:sync registration-space   # or jma-events
 - Put `<x-brand.favicons />` inside your layout's `<head>`.
 - Import the CSS: `@import './brand.css';` in `resources/css/app.css`. On Tailwind v4, this also gives you `bg-brand`, `text-ink`, `bg-brand-50…950` and `font-sans` set to Onest. On Tailwind v3, add `require('./tailwind.brand.preset.js')` to `presets` in `tailwind.config.js`.
 - Use `<x-brand.logo />` and `<x-brand.icon />` in your views.
-- For Filament panels, set the colour, font, logos and favicon in the PanelProvider. See `brands/<brand>/tokens/filament-panel.php`.
+- For Filament panels, set the colour, font, logos, favicon and the aurora login background in the PanelProvider. See `brands/<brand>/tokens/filament-panel.php`.
 
 ## What `brand:sync` writes
 
@@ -41,7 +41,7 @@ php artisan brand:sync registration-space   # or jma-events
 | `public/favicon.ico`, `favicon.svg`, `apple-touch-icon.png`, `android-chrome-*.png`, `maskable-512.png`, `site.webmanifest` | Favicons. Existing `favicon-16x16.png`, `favicon-32x32.png`, `android-chrome-192x192.png` and `android-chrome-512x512.png` are refreshed too. It asks before overwriting changed files; `--force` skips the questions |
 | `resources/css/brand.css` | Onest `@font-face` rules, CSS variables, and the Tailwind v4 `@theme` when the app uses v4 |
 | `tailwind.brand.preset.js` | Only for Tailwind v3 apps |
-| `resources/views/components/brand/` | `logo`, `icon` and `favicons` Blade components |
+| `resources/views/components/brand/` | `logo`, `icon`, `favicons` and `auth-aurora` Blade components |
 
 Don't edit the synced files by hand: change this repo and re-sync.
 
@@ -53,7 +53,23 @@ Don't edit the synced files by hand: change this repo and re-sync.
 <x-brand.logo layout="wordmark" tone="mono-black" />
 <x-brand.icon size="48" />                         {{-- 32 and below automatically use the small-size cut --}}
 <x-brand.favicons />
+<x-brand.auth-aurora />                             {{-- Filament auth background; :environment="false" hides the badge --}}
 ```
+
+### Filament login background
+
+`<x-brand.auth-aurora />` gives every Filament auth page (login, password reset, email verification) the same background: the brand ink colour with two slow glows in the primary and accent colours, and the brand mark faintly to the right. Off production, it shows the app environment and `APP_NAME` in a badge at the bottom, so you can tell staging from local at a glance. It is pure CSS with no JavaScript, and the motion stops when the visitor's device asks for reduced motion.
+
+Register it once in the PanelProvider, which the snippet in `tokens/filament-panel.php` already does:
+
+```php
+use Filament\View\PanelsRenderHook;
+use Illuminate\Support\Facades\Blade;
+
+$panel->renderHook(PanelsRenderHook::SIMPLE_LAYOUT_START, fn (): string => Blade::render('<x-brand.auth-aurora />'));
+```
+
+It is restyled by re-syncing, like everything else here.
 
 ## Updating a brand
 
